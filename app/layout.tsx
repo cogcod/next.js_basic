@@ -1,6 +1,12 @@
+import { Metadata } from 'next';
 import Navigation from '../components/navigation';
 
-export const metadata = {
+export const metadata: Metadata = {
+  title: {
+    // 각 페이지의 title을 가져와서 '%s'에 넣어준다
+    template: '%s | Next Movies',
+    default: 'Next Movies',
+  },
   description: 'The best movies on the best framework',
 };
 
