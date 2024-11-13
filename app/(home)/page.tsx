@@ -4,6 +4,7 @@
 */
 
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 /**
  *  [ metadata ]
@@ -16,32 +17,44 @@ export const metadata: Metadata = {
 };
 // --> 'use client' 컴포넌트에서는 사용 불가!
 
-const URL = 'https://nomad-movies.nomadcoders.workers.dev/movies';
+export const API_URL = 'https://nomad-movies.nomadcoders.workers.dev/movies';
 
 async function getMovies() {
-  // return fetch(URL).then((response) => response.json());
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // console.log('fetching!'); ==> 백엔드에서만 실행!
 
-  const response = await fetch(URL);
+  // return fetch(URL).then((response) => response.json());
+  const response = await fetch(API_URL);
   const json = await response.json();
   return json;
 }
 
 export default async function HomePage() {
   const movies = await getMovies();
-  return <div>{JSON.stringify(movies)}</div>;
+  return (
+    <div>
+      {movies.map((movie) => (
+        <li key={movie.id}>
+          <Link href={`/movies/${movie.id}`}>{movie.title}</Link>
+        </li>
+      ))}
+    </div>
+  );
 }
 
 /**
- * [ 기존 fetch 방식 ]
+ * [ 기존 fetch 방식 - Next.js X]
  *  - 'use client'를 선언하므로 meta data를 사용할 수 없음
+ *  - useEffect, useState 사용
  *  - client에서 React가 작동하기 때문에 항상 API를 써서 백엔드와 통신해야함
  *    >> 그렇지 않으면 브라우저에서 아무나 DB 정보를 알 수 있기 때문에
- *  - isLoading을 스스로 구현해야 함
+ *  - isLoading 구현 필수, 항상 로딩 상태 체크
  */
 
 /**
- * [ Server Side 방식 ]
+ * [ Server Side 방식 - Next.js O ]
+ *  - Next.js는 처음 fetch된 데이터를 기억한뒤(캐싱), 이후에 API 요청을 하지 않는다
+ *    >> Next의 백엔드가 API 없이 직접 데이터베이스에 요청
  *  - 브라우저 network에서 api를 확인할 수 없게됨!
- *  - Next.js는 처음 fetch된 데이터를 기억한뒤, 이후에 API 요청을 하지 않는다
  *  - API의 첫번째 요청에 대한 Loading 상태가 있을 수 있음
  */
