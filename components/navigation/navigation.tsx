@@ -11,12 +11,16 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+// .modue.css 파일을 하나의 js 파일처럼 사용 -> 다른 css 파일과 클래스네임 충돌방지
+// 실제로 랜덤한 클래스네임이 생성된다.
+import styles from './navigation.module.css';
+
 export default function Navigation() {
   // 현재 pathname 알려주는 hook 추가
   const path = usePathname();
   // console.log(path);
   return (
-    <nav>
+    <nav className={styles.nav}>
       <ul>
         {/* 
           a태그의 href는 브라우저의 네비게이션을 사용하게 됨 -> 새로고침 현상
