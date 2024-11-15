@@ -12,23 +12,10 @@
     }
  */
 
+import { Suspense } from 'react';
 import { API_URL } from '../../../(home)/page';
-
-async function getMovie(id: string) {
-  console.log(`Fetching movies: ${Date.now()}`);
-  await new Promise((resolve) => setTimeout(resolve, 5000));
-
-  const response = await fetch(`${API_URL}/${id}`);
-  return response.json();
-}
-
-async function getVideos(id: string) {
-  console.log(`Fetching videos: ${Date.now()}`);
-  await new Promise((resolve) => setTimeout(resolve, 5000));
-
-  const response = await fetch(`${API_URL}/${id}/videos`);
-  return response.json();
-}
+import MovieInfo from '../../../../components/movie-info';
+import MovieVideos from '../../../../components/movie-videos';
 
 export default async function MovieDetail({
   params: { id }, // props.params.id
@@ -36,14 +23,33 @@ export default async function MovieDetail({
   params: { id: string }; // 타입설정
 }) {
   // console.log('id=>', { id });
+
+  // 1. 각 함수 순차실행
   // const movie = await getMovie(id);
   // const videos = await getVideos(id);
+
   /**
-   * getMovie와 getVideos 함수 순차실행을 Promise.all을 사용해서 병렬로 변경하기
-   * Promise.all은 array를 return하기 때문에 [movie, videos]로 받기
+   * 2. Promise.all로 병렬실행 (시간절약)
+   * - getMovie와 getVideos 함수 순차실행을 Promise.all을 사용해서 병렬로 변경하기
+   * - Promise.all은 array를 return하기 때문에 [movie, videos]로 받는다
    */
-  console.log('start fetching');
-  const [movie, videos] = await Promise.all([getMovie(id), getVideos(id)]);
-  console.log('end fetching');
-  return <h1>{movie.title}</h1>;
+  // const [movie, videos] = await Promise.all([getMovie(id), getVideos(id)]);
+
+  /**
+   * 3. Suspense
+   * - 각 컴포넌트 병렬 실행
+   * - data를 fetch하기 전에 자동 await 시켜준다
+   * - await 되는 동안 fallback props 내용 노출
+   */
+  return (
+    <div>
+      <h3>Movie detail page</h3>
+      <Suspense fallback={<h1>Loading movie info</h1>}>
+        <MovieInfo id={id} />
+      </Suspense>
+      <Suspense fallback={<h1>Loading movie video</h1>}>
+        <MovieVideos id={id} />
+      </Suspense>
+    </div>
+  );
 }
