@@ -7,6 +7,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Movie from '../../components/movie';
 import styles from './home.module.css';
+import { API_URL } from '../constants';
 
 /**
  *  [ metadata ]
@@ -18,8 +19,6 @@ export const metadata: Metadata = {
   title: 'Home',
 };
 // --> 'use client' 컴포넌트에서는 사용 불가!
-
-export const API_URL = 'https://nomad-movies.nomadcoders.workers.dev/movies';
 
 async function getMovies() {
   // await new Promise((resolve) => setTimeout(resolve, 1000));

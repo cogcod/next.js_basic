@@ -13,7 +13,6 @@
  */
 
 import { Suspense } from 'react';
-import { API_URL } from '../../../(home)/page';
 import MovieInfo, { getMovie } from '../../../../components/movie-info';
 import MovieVideos from '../../../../components/movie-videos';
 

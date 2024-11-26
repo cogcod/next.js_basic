@@ -1,7 +1,7 @@
 // Video(영화 관련 영상)만 렌더링하는 UI 컴포넌트
 
+import { API_URL } from '../app/constants';
 import styles from '../styles/movie-videos.module.css';
-import { API_URL } from '../app/(home)/page';
 
 async function getVideos(id: string) {
   console.log(`Fetching movies: ${Date.now()}`);
