@@ -14,14 +14,24 @@
 
 import { Suspense } from 'react';
 import { API_URL } from '../../../(home)/page';
-import MovieInfo from '../../../../components/movie-info';
+import MovieInfo, { getMovie } from '../../../../components/movie-info';
 import MovieVideos from '../../../../components/movie-videos';
 
-export default async function MovieDetail({
+interface IParams {
+  params: { id: string };
+}
+
+// 동적 MetaData
+export async function generateMetadata({ params: { id } }: IParams) {
+  const movie = await getMovie(id);
+  return {
+    title: movie.title,
+  };
+}
+
+export default async function MovieDetailPage({
   params: { id }, // props.params.id
-}: {
-  params: { id: string }; // 타입설정
-}) {
+}: IParams) {
   // console.log('id=>', { id });
 
   // 1. 각 함수 순차실행
